@@ -28,26 +28,18 @@ bedtools bamtobed -i $OUTDIR/WT_ckit_mIgG_drm_sort.bam > $OUTDIR/WT_ckit_mIgG_H2
 bedtools intersect -v -a $OUTDIR/WT_ckit_mIgG.bed -b $HOMEDIR/mm10-blacklist.v2.bed > $OUTDIR/WT_ckit_mIgG_bl.bed
 bamCoverage -b $OUTDIR/WT_ckit_mIgG_drm_sort.bam -bl $HOMEDIR/mm10-blacklist.v2.bed -o $OUTDIR/WT_ckit_mIgG_cov.bw --normalizeUsing RPKM
 
-macs3 callpeak -g mm -f BAMPE -t $OUTDIR/WT_ckit_H2AX1_drm_sort.bam $OUTDIR/WT_ckit_H2AX2_drm_sort.bam -c $OUTDIR/WT_ckit_mIgG_drm_sort.bam -q 0.05 -n $OUTDIR/WT_ckit_H2AX --nomodel --keep-dup=all --call-summits
-macs3 callpeak -g mm -f BAMPE -t $OUTDIR/WT_ckit_H2AZ1_drm_sort.bam $OUTDIR/WT_ckit_H2AZ2_drm_sort.bam -c $OUTDIR/WT_ckit_mIgG_drm_sort.bam -q 0.05 -n $OUTDIR/WT_ckit_H2AZ --nomodel --keep-dup=all --call-summits
-macs3 callpeak -g mm -f BAMPE -t $OUTDIR/WT_ckit_SRCAP1_drm_sort.bam $OUTDIR/WT_ckit_SRCAP2_drm_sort.bam -c $OUTDIR/WT_ckit_mIgG_drm_sort.bam -q 0.05 -n $OUTDIR/WT_ckit_SRCAP --nomodel --keep-dup=all --call-summits
-annotatePeaks.pl $OUTDIR/WT_ckit_H2AX_summits.bed mm10 -gtf $HOMEDIR/mm10/gencode.vM10.chr_patch_hapl_scaff.annotation.gtf > $OUTDIR/WT_ckit_H2AX.txt
-annotatePeaks.pl $OUTDIR/WT_ckit_H2AZ_summits.bed mm10 -gtf $HOMEDIR/mm10/gencode.vM10.chr_patch_hapl_scaff.annotation.gtf > $OUTDIR/WT_ckit_H2AZ.txt
-annotatePeaks.pl $OUTDIR/WT_ckit_SRCAP_summits.bed mm10 -gtf $HOMEDIR/mm10/gencode.vM10.chr_patch_hapl_scaff.annotation.gtf > $OUTDIR/WT_ckit_SRCAP.txt
-cut -f 1-3 $OUTDIR/WT_ckit_H2AX_peaks.narrowPeak > $OUTDIR/WT_ckit_H2AX_peaks.bed
-cut -f 1-3 $OUTDIR/WT_ckit_H2AZ_peaks.narrowPeak > $OUTDIR/WT_ckit_H2AZ_peaks.bed
-cut -f 1-3 $OUTDIR/WT_ckit_SRCAP_peaks.narrowPeak > $OUTDIR/WT_ckit_SRCAP_peaks.bed
-
-macs3 callpeak -g mm -f BAMPE -t $OUTDIR/Mut_ckit_H2AX1_drm_sort.bam $OUTDIR/Mut_ckit_H2AX2_drm_sort.bam -c $OUTDIR/Mut_ckit_mIgG_drm_sort.bam -q 0.05 -n $OUTDIR/Mut_ckit_H2AX --nomodel --keep-dup=all --call-summits
-macs3 callpeak -g mm -f BAMPE -t $OUTDIR/Mut_ckit_H2AZ1_drm_sort.bam $OUTDIR/Mut_ckit_H2AZ2_drm_sort.bam -c $OUTDIR/Mut_ckit_mIgG_drm_sort.bam -q 0.05 -n $OUTDIR/Mut_ckit_H2AZ --nomodel --keep-dup=all --call-summits
-macs3 callpeak -g mm -f BAMPE -t $OUTDIR/Mut_ckit_SRCAP1_drm_sort.bam $OUTDIR/Mut_ckit_SRCAP2_drm_sort.bam -c $OUTDIR/Mut_ckit_mIgG_drm_sort.bam -q 0.05 -n $OUTDIR/Mut_ckit_SRCAP --nomodel --keep-dup=all --call-summits
-annotatePeaks.pl $OUTDIR/Mut_ckit_H2AX_summits.bed mm10 -gtf $HOMEDIR/mm10/gencode.vM10.chr_patch_hapl_scaff.annotation.gtf > $OUTDIR/Mut_ckit_H2AX.txt
-annotatePeaks.pl $OUTDIR/Mut_ckit_H2AZ_summits.bed mm10 -gtf $HOMEDIR/mm10/gencode.vM10.chr_patch_hapl_scaff.annotation.gtf > $OUTDIR/Mut_ckit_H2AZ.txt
-annotatePeaks.pl $OUTDIR/Mut_ckit_SRCAP_summits.bed mm10 -gtf $HOMEDIR/mm10/gencode.vM10.chr_patch_hapl_scaff.annotation.gtf > $OUTDIR/Mut_ckit_SRCAP.txt
-cut -f 1-3 $OUTDIR/Mut_ckit_H2AX_peaks.narrowPeak > $OUTDIR/Mut_ckit_H2AX_peaks.bed
-cut -f 1-3 $OUTDIR/Mut_ckit_H2AZ_peaks.narrowPeak > $OUTDIR/Mut_ckit_H2AZ_peaks.bed
-cut -f 1-3 $OUTDIR/Mut_ckit_SRCAP_peaks.narrowPeak > $OUTDIR/Mut_ckit_SRCAP_peaks.bed
-
+Mark=("H2AZ" "H2AX" "SRCAP")
+for target in ${Mark[@]}; do
+  macs3 callpeak -g mm -f BAMPE -t $OUTDIR/Mut_ckit_H2AX1_drm_sort.bam $OUTDIR/Mut_ckit_H2AX2_drm_sort.bam -c $OUTDIR/Mut_ckit_mIgG_drm_sort.bam -q 0.05 -n $OUTDIR/Mut_ckit_H2AX --nomodel --keep-dup=all --call-summits
+  macs3 callpeak -g mm -f BAMPE -t $OUTDIR/Mut_ckit_H2AZ1_drm_sort.bam $OUTDIR/Mut_ckit_H2AZ2_drm_sort.bam -c $OUTDIR/Mut_ckit_mIgG_drm_sort.bam -q 0.05 -n $OUTDIR/Mut_ckit_H2AZ --nomodel --keep-dup=all --call-summits
+  macs3 callpeak -g mm -f BAMPE -t $OUTDIR/Mut_ckit_SRCAP1_drm_sort.bam $OUTDIR/Mut_ckit_SRCAP2_drm_sort.bam -c $OUTDIR/Mut_ckit_mIgG_drm_sort.bam -q 0.05 -n $OUTDIR/Mut_ckit_SRCAP --nomodel --keep-dup=all --call-summits
+  annotatePeaks.pl $OUTDIR/Mut_ckit_H2AX_summits.bed mm10 -gtf $HOMEDIR/mm10/gencode.vM10.chr_patch_hapl_scaff.annotation.gtf > $OUTDIR/Mut_ckit_H2AX.txt
+  annotatePeaks.pl $OUTDIR/Mut_ckit_H2AZ_summits.bed mm10 -gtf $HOMEDIR/mm10/gencode.vM10.chr_patch_hapl_scaff.annotation.gtf > $OUTDIR/Mut_ckit_H2AZ.txt
+  annotatePeaks.pl $OUTDIR/Mut_ckit_SRCAP_summits.bed mm10 -gtf $HOMEDIR/mm10/gencode.vM10.chr_patch_hapl_scaff.annotation.gtf > $OUTDIR/Mut_ckit_SRCAP.txt
+  cut -f 1-3 $OUTDIR/Mut_ckit_H2AX_peaks.narrowPeak > $OUTDIR/Mut_ckit_H2AX_peaks.bed
+  cut -f 1-3 $OUTDIR/Mut_ckit_H2AZ_peaks.narrowPeak > $OUTDIR/Mut_ckit_H2AZ_peaks.bed
+  cut -f 1-3 $OUTDIR/Mut_ckit_SRCAP_peaks.narrowPeak > $OUTDIR/Mut_ckit_SRCAP_peaks.bed
+done
 cat $OUTDIR/WT_ckit_H2AX_peaks.bed $OUTDIR/Mut_ckit_H2AX_peaks.bed > $OUTDIR/H2AX_ckit_combined_peaks.bed
 bedtools sort -i $OUTDIR/H2AX_ckit_combined_peaks.bed > $OUTDIR/H2AX_ckit_combined_peaks_sort.bed
 bedtools merge -i $OUTDIR/H2AX_ckit_combined_peaks_sort.bed > $OUTDIR/H2AX_ckit_combined_peaks_merge.bed
