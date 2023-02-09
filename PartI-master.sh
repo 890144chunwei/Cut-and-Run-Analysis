@@ -12,6 +12,15 @@ FASTQDIR="/storage/goodell/projects/chunweic/220601_Chunwei_CaR_molm13/220601"
 OUTDIR="/storage/goodell/projects/chunweic/220630_Chunwei_CaR_LSK/Align"
 HOMEDIR="/storage/goodell/home/chunweic"
 
+trimmomatic PE -threads 1 -phred33 \
+$FASTQDIR/WT_ckit_H3K27me3_S2_L001_R1_001.fastq $FASTQDIR/WT_ckit_H3K27me3_S2_L001_R2_001.fastq \
+$OUTDIR/WT_ckit_H3K27me3_R1_paired.fastq $OUTDIR/WT_ckit_H3K27me3_R1_unpaired.fastq $OUTDIR/WT_ckit_H3K27me3_R2_paired.fastq $OUTDIR/WT_ckit_H3K27me3_R2_unpaired.fastq \
+ILLUMINACLIP:$HOMEDIR/adapter_trim/TruSeq3-PE-2.fa:2:15:4:4:true LEADING:20 TRAILING:20 SLIDINGWINDOW:4:15 MINLEN:25
+bowtie2 --dovetail --phred33 -x $HOMEDIR/mm10/BowtieIndex/mm10/mm10 -1 $OUTDIR/WT_ckit_H3K27me3_R1_paired.fastq -2 $OUTDIR/WT_ckit_H3K27me3_R2_paired.fastq -S $OUTDIR/WT_ckit_H3K27me3.sam
+samtools view -S -b $OUTDIR/WT_ckit_H3K27me3.sam > $OUTDIR/WT_ckit_H3K27me3.bam
+samtools sort $OUTDIR/WT_ckit_H3K27me3.bam $OUTDIR/WT_ckit_H3K27me3_sort
+samtools index $OUTDIR/WT_ckit_H3K27me3_sort.bam
+
 samtools rmdup -S $OUTDIR/WT_ckit_mIgG_sort.bam $OUTDIR/WT_ckit_mIgG_drm.bam
 samtools sort $OUTDIR/WT_ckit_mIgG_drm.bam $OUTDIR/WT_ckit_mIgG_drm_sort
 samtools index $OUTDIR/WT_ckit_mIgG_drm_sort.bam
@@ -50,13 +59,6 @@ bedtools merge -i $OUTDIR/H2AZ_ckit_combined_peaks_sort.bed > $OUTDIR/H2AZ_ckit_
 cat $OUTDIR/WT_ckit_SRCAP_peaks.bed $OUTDIR/Mut_ckit_SRCAP_peaks.bed > $OUTDIR/SRCAP_ckit_combined_peaks.bed
 bedtools sort -i $OUTDIR/SRCAP_ckit_combined_peaks.bed > $OUTDIR/SRCAP_ckit_combined_peaks_sort.bed
 bedtools merge -i $OUTDIR/SRCAP_ckit_combined_peaks_sort.bed > $OUTDIR/SRCAP_ckit_combined_peaks_merge.bed
-
-bedtools intersect -v -a $OUTDIR/WT_ckit_H2AX_peaks.bed -b $OUTDIR/Mut_ckit_H2AX_peaks.bed -wa > $OUTDIR/H2AX_ckit_a-b.bed
-bedtools intersect -v -a $OUTDIR/Mut_ckit_H2AX_peaks.bed -b $OUTDIR/WT_ckit_H2AX_peaks.bed -wa > $OUTDIR/H2AX_ckit_b-a.bed
-bedtools intersect -v -a $OUTDIR/WT_ckit_H2AZ_peaks.bed -b $OUTDIR/Mut_ckit_H2AZ_peaks.bed -wa > $OUTDIR/H2AZ_ckit_a-b.bed
-bedtools intersect -v -a $OUTDIR/Mut_ckit_H2AZ_peaks.bed -b $OUTDIR/WT_ckit_H2AZ_peaks.bed -wa > $OUTDIR/H2AZ_ckit_b-a.bed
-bedtools intersect -v -a $OUTDIR/WT_ckit_SRCAP_peaks.bed -b $OUTDIR/Mut_ckit_SRCAP_peaks.bed -wa > $OUTDIR/SRCAP_ckit_a-b.bed
-bedtools intersect -v -a $OUTDIR/Mut_ckit_SRCAP_peaks.bed -b $OUTDIR/WT_ckit_SRCAP_peaks.bed -wa > $OUTDIR/SRCAP_ckit_b-a.bed
 
 awk 'OFS="\t" {print $1"."$2"."$3, $1, $2, $3, "."}' $OUTDIR/H2AX_ckit_combined_peaks_merge.bed > $OUTDIR/H2AX_ckit_combined_merge.saf
 awk 'OFS="\t" {print $1"."$2"."$3, $1, $2, $3, "."}' $OUTDIR/H2AZ_ckit_combined_peaks_merge.bed > $OUTDIR/H2AZ_ckit_combined_merge.saf
