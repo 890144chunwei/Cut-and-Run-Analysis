@@ -39,7 +39,7 @@ for target in ${Mark[@]}; do
   awk 'OFS="\t" {print $1"."$2"."$3, $1, $2, $3, "."}' $OUTDIR/$target_ckit_combined_peaks_merge.bed > $OUTDIR/$target_ckit_combined_merge.saf
 done
 
-featureCounts -T 7 -p -F SAF -a $OUTDIR/H2AZ_ckit_combined_merge.saf -o $OUTDIR/WT_ckit_H2AZ1_fc.txt $OUTDIR/WT_ckit_H2AZ1_drm_sort.bam
-featureCounts -T 7 -p -F SAF -a $OUTDIR/H2AZ_ckit_combined_merge.saf -o $OUTDIR/WT_ckit_H2AZ2_fc.txt $OUTDIR/WT_ckit_H2AZ2_drm_sort.bam
-featureCounts -T 7 -p -F SAF -a $OUTDIR/H2AZ_ckit_combined_merge.saf -o $OUTDIR/Mut_ckit_H2AZ1_fc.txt $OUTDIR/Mut_ckit_H2AZ1_drm_sort.bam
-featureCounts -T 7 -p -F SAF -a $OUTDIR/H2AZ_ckit_combined_merge.saf -o $OUTDIR/Mut_ckit_H2AZ2_fc.txt $OUTDIR/Mut_ckit_H2AZ2_drm_sort.bam
+featureCounts -T 7 -p -F SAF -a $OUTDIR/SRCAP_ckit_combined_merge.saf -o $OUTDIR/WT_ckit_SRCAP1_fc.txt $OUTDIR/WT_ckit_SRCAP1_drm_sort.bam
+featureCounts -T 7 -p -F SAF -a $OUTDIR/SRCAP_ckit_combined_merge.saf -o $OUTDIR/WT_ckit_SRCAP2_fc.txt $OUTDIR/WT_ckit_SRCAP2_drm_sort.bam
+featureCounts -T 7 -p -F SAF -a $OUTDIR/SRCAP_ckit_combined_merge.saf -o $OUTDIR/Mut_ckit_SRCAP1_fc.txt $OUTDIR/Mut_ckit_SRCAP1_drm_sort.bam
+featureCounts -T 7 -p -F SAF -a $OUTDIR/SRCAP_ckit_combined_merge.saf -o $OUTDIR/Mut_ckit_SRCAP2_fc.txt $OUTDIR/Mut_ckit_SRCAP2_drm_sort.bam
